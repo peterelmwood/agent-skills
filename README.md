@@ -159,7 +159,7 @@ feature-request-issue-author/
     └── example-issue.md                  a complete example feature request
 ```
 
-Each skill is also published as a single-file gist ([bug report](https://gist.github.com/peterelmwood/96292c79fc4a4d79ccf4d56c028d9982), [feature request](https://gist.github.com/peterelmwood/0e4d46e228da29c54bc17036b8dbb135)). The gists contain only `SKILL.md`. This repo also includes the example issue each skill uses as its model.
+Each skill is also published as a gist ([bug report](https://gist.github.com/peterelmwood/96292c79fc4a4d79ccf4d56c028d9982), [feature request](https://gist.github.com/peterelmwood/0e4d46e228da29c54bc17036b8dbb135)). Gists can't contain folders, so the files sit side by side there: `SKILL.md` is saved under the skill's name, and `example-issue.md` sits next to it. Use this repo's folder (or `.skill` file) to install, since that keeps the `references/` path the skill expects.
 
 ---
 
