@@ -89,7 +89,7 @@ attachments. It contains the loose files plus the nested package unzipped to
 
 - [X] T015 Run quickstart V5 (`git diff --stat main` over the existing skill folders and archives) to confirm nothing outside the new files and `README.md` changed (FR-011, SC-005).
 - [X] T016 Rerun quickstart V1–V4 together as a final regression pass, and record the results in the implementation summary.
-- [ ] T017 Stage only `peter-pr-review/`, `peter-pr-review.skill`, `README.md` and `specs/001-peter-pr-review-skill/` with explicit `git add <paths>`, never `git add .`. Confirm with `git status --short` that `.specify/` and `.claude/` stay unstaged (plan Constraints). Commit only if the user approves.
+- [X] T017 Stage only `peter-pr-review/`, `peter-pr-review.skill`, `README.md` and `specs/001-peter-pr-review-skill/` with explicit `git add <paths>`, never `git add .`. Confirm with `git status --short` that `.specify/` and `.claude/` stay unstaged (plan Constraints). Commit only if the user approves.
 
 ---
 
