@@ -10,7 +10,7 @@ Skills for Claude that help it write, review, and refactor code well, and write 
 git clone https://github.com/peterelmwood/agent-skills.git
 mkdir -p ~/.claude/skills
 cd agent-skills
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review ~/.claude/skills/
 ```
 
 **Windows (PowerShell)**
@@ -19,10 +19,10 @@ cp -r design-patterns react-anti-patterns bug-report-issue-author feature-reques
 git clone https://github.com/peterelmwood/agent-skills.git
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 cd agent-skills
-Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author "$HOME\.claude\skills\"
+Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review "$HOME\.claude\skills\"
 ```
 
-Then start a new Claude Code session. All four skills are now installed. You don't have to call them: Claude uses one when your request matches it.
+Then start a new Claude Code session. All five skills are now installed. You don't have to call them: Claude uses one when your request matches it.
 
 To install only some of them, copy just those folders (for example `cp -r design-patterns ~/.claude/skills/`).
 
@@ -43,6 +43,7 @@ The `.skill` files are zip archives of the folders, packaged for upload.
 | [`react-anti-patterns`](react-anti-patterns/SKILL.md) | Spotting common React mistakes and picking the right fix for each one. |
 | [`bug-report-issue-author`](bug-report-issue-author/SKILL.md) | Turning a bug into a GitHub issue with a root-cause analysis and a proposed fix. |
 | [`feature-request-issue-author`](feature-request-issue-author/SKILL.md) | Turning a feature idea into a GitHub issue with code research, risks, and a rollout plan. |
+| [`peter-pr-review`](peter-pr-review/SKILL.md) | Reviewing a pull request or diff the way Peter does, on Django/DRF and React/TypeScript code, with inline comments and a review summary. |
 
 ### design-patterns
 
@@ -161,6 +162,38 @@ feature-request-issue-author/
 
 Each skill is also published as a gist ([bug report](https://gist.github.com/peterelmwood/96292c79fc4a4d79ccf4d56c028d9982), [feature request](https://gist.github.com/peterelmwood/0e4d46e228da29c54bc17036b8dbb135)). Gists can't contain folders, so the files sit side by side there: `SKILL.md` is saved under the skill's name, and `example-issue.md` sits next to it. Use this repo's folder (or `.skill` file) to install, since that keeps the `references/` path the skill expects.
 
+### peter-pr-review
+
+This skill has Claude review a pull request the way Peter does. It's distilled from about 595 pull requests Peter reviewed between 2023 and 2025, across Django/DRF, React/TypeScript, and .NET code. Where his habits changed over time, the 2025 reviews win.
+
+The skill checks these areas, ranked by how often Peter raises them:
+
+- functions that do too much, logic in the wrong layer, and passing more parameters than a function needs
+- query count in Django: N+1 queries, missing `select_related`/`prefetch_related`, and per-row saves that could be bulk operations
+- docstrings and "why" comments for anything unusual
+- tests that are well named and actually prove the change
+- type hints and TypeScript types that match what the code really returns
+- formatting, serializer and QuerySet placement, naming, error handling, and REST semantics
+
+Comments follow his voice: short for mechanical fixes, and longer with code, evidence, and a "Reasoning:" list for design, correctness, and typing problems.
+
+**When it runs:** when you ask Claude to review a PR or diff "like Peter", to pre-review a branch before you request review, or to draft review comments in his voice.
+
+**What it produces:** inline comments as `path:line` plus the comment text, followed by a summary and a verdict (**Request changes**, **Comment**, or **Approve**). Claude shows you the draft to edit. It doesn't post the review unless you ask it to.
+
+**What's inside:**
+
+```
+peter-pr-review/
+├── SKILL.md                              how Peter reviews, what he looks for, voice, and examples
+└── references/
+    ├── examples-backend.md               Django/DRF views, serializers, QuerySets, migrations, and queries
+    ├── examples-tests.md                 pytest/Django and Vitest/Testing Library tests, fixtures, and mocks
+    ├── examples-typing.md                Python type hints, TypeScript types, nullability, and casts
+    ├── examples-frontend.md              React components, hooks, loaders, and MUI/AG Grid usage
+    └── examples-summaries-and-pushback.md   review summaries, and replies when the author disagrees
+```
+
 ---
 
 ## How skills work
@@ -191,7 +224,7 @@ In Claude Code, ask *"What skills do you have available?"* The installed skills 
 ```sh
 cd agent-skills
 git pull
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review ~/.claude/skills/
 ```
 
 On Windows, run the same `Copy-Item` command from the quick start.
