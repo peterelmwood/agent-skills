@@ -74,8 +74,8 @@ plan created in Story 1.
 
 **Independent Test**: Read `SKILL.md` and confirm it instructs the agent to check for an
 existing `*-steps.md`, update it in place, preserve existing content, flag conflicts under
-Open questions, log the update and re-run the check; and that a request to "start over"
-produces a new file name rather than wiping the old file.
+Open questions, log the update and re-run the check; and that it never overwrites a file that
+has ticked boxes or log entries.
 
 **Acceptance Scenarios**:
 
@@ -144,8 +144,10 @@ machine; confirm the new skill is copied along with the others.
 
 ### Edge Cases
 
-- A user says "start over" on an existing plan: the skill creates a new file name instead of
-  wiping the existing file and its progress.
+- A user says "start over" on an existing plan: the shipped `SKILL.md` never overwrites a
+  file that has ticked boxes or log entries, so the old file and its progress survive. An
+  explicit "start over → new file name" instruction (issue §6) is not in the adopted source
+  and is a follow-up outside this feature.
 - The checker is run with no argument or with too many: it prints its usage and exits with
   a distinct status, without a traceback.
 - The plan file contains no recognisable steps: the checker says so and exits with a failure
@@ -190,8 +192,9 @@ machine; confirm the new skill is copied along with the others.
   built with the commands in the README's "Repository layout" section, whose entries match
   the folder's files byte for byte under a single `step-breakdown/` root.
 - **FR-011**: The README MUST add `step-breakdown` to the skills table, to both Quick start
-  copy commands and to the Updating copy command; change "All five skills" to six; and add a
-  `### step-breakdown` section in the same shape as the existing per-skill sections.
+  copy commands and to the Updating copy command; change "All five skills" to six; widen the
+  tagline by one clause to mention planning; and add a `### step-breakdown` section in the
+  same shape as the existing per-skill sections.
 - **FR-012**: The change MUST NOT modify any existing skill folder or `.skill` archive.
 
 ### Key Entities
