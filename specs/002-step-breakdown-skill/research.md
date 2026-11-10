@@ -67,6 +67,26 @@ found while extracting the issue's source and inspecting the repo.
 - **Alternatives considered**: Leave the tagline as is. Rejected as now inaccurate; issue §10
   leaves the call to the maintainer, so the change is kept to one clause.
 
+## Follow-ups (found during implementation)
+
+The skill content is adopted as-is, so these are recorded rather than patched:
+
+1. **"Start over" rule.** Issue §6 says "start over" should create a new file name, but
+   `SKILL.md` only says never to overwrite a file with ticks or log entries. Consider adding
+   the explicit rule to "Updating an existing plan".
+2. **Parent availability.** `check_plan.py` treats a parent as satisfied once all its
+   children are ticked, even if the parent itself is unticked and its own `Needs` aren't. In
+   the worked example, ticking 10a–10c makes step 11 available while gate 5 is open (the
+   checker does warn about the ticked-while-blocked children and the unticked parent). This
+   matches `SKILL.md`'s rule ("14 is ticked when its children are"), but the user may want
+   availability to also require the parent's own `Needs`.
+3. **Duplicate IDs in "Available now".** With a duplicate ID, the step is listed twice in
+   "Available now" (the second definition overwrites the first in the step table, but both
+   positions stay in the order list). The duplicate itself is reported as an error, so this
+   is cosmetic.
+4. **`.gitignore`.** The repo had none; a minimal one (`__pycache__/`, `*.pyc`, OS files)
+   was added so a checker run can't leave bytecode to be committed or packaged.
+
 ## R6. Out of scope (confirmed)
 
 Gist version of the skill, committing `evals/`, trigger-recall tuning, and external tool

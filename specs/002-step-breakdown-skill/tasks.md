@@ -27,8 +27,8 @@ repo, used for the fetched issue body, extracted files and fixture plans.
 
 **Purpose**: Get the source from issue #3 into the scratch folder.
 
-- [ ] T001 Fetch the issue body as JSON with `gh issue view 3 --repo peterelmwood/agent-skills --json body > $S/issue3.json` (research R1; don't use console-formatted output, which wraps long lines).
-- [ ] T002 Extract the ````` ````markdown ````` fence to `$S/extract/SKILL.md` and the ```` ```python ```` fence to `$S/extract/check_plan.py` with a short Python script run with `python -I`: normalise to LF, append one trailing newline, write UTF-8 without BOM. Confirm 211 and 210 lines, `name: step-breakdown` on line 2, and `python -I -m py_compile $S/extract/check_plan.py` succeeds.
+- [X] T001 Fetch the issue body as JSON with `gh issue view 3 --repo peterelmwood/agent-skills --json body > $S/issue3.json` (research R1; don't use console-formatted output, which wraps long lines).
+- [X] T002 Extract the ````` ````markdown ````` fence to `$S/extract/SKILL.md` and the ```` ```python ```` fence to `$S/extract/check_plan.py` with a short Python script run with `python -I`: normalise to LF, append one trailing newline, write UTF-8 without BOM. Confirm 211 and 210 lines, `name: step-breakdown` on line 2, and `python -I -m py_compile $S/extract/check_plan.py` succeeds.
 
 ---
 
@@ -36,7 +36,7 @@ repo, used for the fetched issue body, extracted files and fixture plans.
 
 **Purpose**: Blocking checks before anything is added.
 
-- [ ] T003 Confirm nothing named `step-breakdown` exists yet at the repo root (`step-breakdown/`, `step-breakdown.skill`) and that `README.md` doesn't mention `step-breakdown`; confirm the current branch is `002-step-breakdown-skill`.
+- [X] T003 Confirm nothing named `step-breakdown` exists yet at the repo root (`step-breakdown/`, `step-breakdown.skill`) and that `README.md` doesn't mention `step-breakdown`; confirm the current branch is `002-step-breakdown-skill`.
 
 **Checkpoint**: Source extracted and verified; target paths are free.
 
@@ -48,12 +48,12 @@ repo, used for the fetched issue body, extracted files and fixture plans.
 
 **Independent Test**: quickstart §1, §2, §3 and §4 pass against `step-breakdown/`.
 
-- [ ] T004 [US1] Copy `$S/extract/SKILL.md` to `step-breakdown/SKILL.md` byte-for-byte (FR-001, FR-003).
-- [ ] T005 [P] [US1] Copy `$S/extract/check_plan.py` to `step-breakdown/scripts/check_plan.py` byte-for-byte (FR-001, FR-008).
-- [ ] T006 [US1] Run quickstart §1: `cmp` both files against `$S/extract/`, confirm `find step-breakdown -type f` lists exactly the two files (no `evals/`, no `__pycache__`; FR-002), and `git ls-files --eol` after staging shows `i/lf` for both.
-- [ ] T007 [P] [US1] Run quickstart §2: save the worked example from `step-breakdown/SKILL.md` as `$S/example-steps.md` and run the checker. Expect 13 steps, 1 gate, 3 done, available `3, 6, 7, 8`, gate `5` waiting, `OK`, exit 0 (SC-002).
-- [ ] T008 [P] [US1] Run quickstart §3: write `$S/broken-steps.md` (unknown `Needs` ID, 2-step cycle, `⇉` line contradicting `Needs`, step with no `Done when`, duplicate ID, `~45 min` step with no exception) and `$S/stuck-steps.md` (every step needs an unticked gate). Also write `$S/empty-steps.md` with prose but no step lines. Expect exit 1 with each planted error reported, the 45-minute step as a warning, `no step is available right now` for the second file, and `ERROR: no steps found` for the third (FR-007, SC-003, spec Edge Cases).
-- [ ] T009 [US1] Run quickstart §4: no-argument and two-argument runs each print usage and exit 2 with no traceback; `PYTHONIOENCODING=cp1252` run on `$S/example-steps.md` prints the `⏳` gate line with no `UnicodeEncodeError` and exits 0 (FR-008, SC-004). Run with `python -B` to avoid creating `step-breakdown/scripts/__pycache__`; remove it if it appears.
+- [X] T004 [US1] Copy `$S/extract/SKILL.md` to `step-breakdown/SKILL.md` byte-for-byte (FR-001, FR-003).
+- [X] T005 [P] [US1] Copy `$S/extract/check_plan.py` to `step-breakdown/scripts/check_plan.py` byte-for-byte (FR-001, FR-008).
+- [X] T006 [US1] Run quickstart §1: `cmp` both files against `$S/extract/`, confirm `find step-breakdown -type f` lists exactly the two files (no `evals/`, no `__pycache__`; FR-002), and `git ls-files --eol` after staging shows `i/lf` for both.
+- [X] T007 [P] [US1] Run quickstart §2: save the worked example from `step-breakdown/SKILL.md` as `$S/example-steps.md` and run the checker. Expect 13 steps, 1 gate, 3 done, available `3, 6, 7, 8`, gate `5` waiting, `OK`, exit 0 (SC-002).
+- [X] T008 [P] [US1] Run quickstart §3: write `$S/broken-steps.md` (unknown `Needs` ID, 2-step cycle, `⇉` line contradicting `Needs`, step with no `Done when`, duplicate ID, `~45 min` step with no exception) and `$S/stuck-steps.md` (every step needs an unticked gate). Also write `$S/empty-steps.md` with prose but no step lines. Expect exit 1 with each planted error reported, the 45-minute step as a warning, `no step is available right now` for the second file, and `ERROR: no steps found` for the third (FR-007, SC-003, spec Edge Cases).
+- [X] T009 [US1] Run quickstart §4: no-argument and two-argument runs each print usage and exit 2 with no traceback; `PYTHONIOENCODING=cp1252` run on `$S/example-steps.md` prints the `⏳` gate line with no `UnicodeEncodeError` and exits 0 (FR-008, SC-004). Run with `python -B` to avoid creating `step-breakdown/scripts/__pycache__`; remove it if it appears.
 
 **Checkpoint**: The folder alone is installable via `cp -r step-breakdown ~/.claude/skills/`.
 
@@ -65,8 +65,8 @@ repo, used for the fetched issue body, extracted files and fixture plans.
 
 **Independent Test**: Every item below is found in `step-breakdown/SKILL.md`.
 
-- [ ] T010 [US2] Check `step-breakdown/SKILL.md` covers: checking for an existing `*-steps.md` before creating; never overwriting a file with ticks or log rows; preserving ticks, notes, decisions, `📎` lines and log rows; flagging conflicts under **Open questions**; appending a dated Progress log row; re-running the check; and split rules (`14` → `14a`, next unused number, never renumber) (FR-006, FR-009). Don't edit the file (content is adopted as-is); record any gap in `specs/002-step-breakdown-skill/research.md` under a "Follow-ups" heading and in the implementation report. The known gap is the explicit "start over → new file name" rule from issue §6 (spec Edge Cases).
-- [ ] T011 [P] [US2] Using a copy of `$S/example-steps.md`, tick 10a–10c without ticking parent 10 and run the checker: expect the "all children ticked — tick the parent" warning and step 11 not yet available; then tick 10 and confirm step 11 becomes available once gate 5 is ticked. Also, from a fresh copy: tick 10 with 10a–10c unticked → expect the "parent ticked but not all children are" error, exit 1; and tick 10b while gate 5 is unticked → expect the "ticked while its Needs … aren't" warning (parent/child availability, data-model Parent rules, spec Edge Cases).
+- [X] T010 [US2] Check `step-breakdown/SKILL.md` covers: checking for an existing `*-steps.md` before creating; never overwriting a file with ticks or log rows; preserving ticks, notes, decisions, `📎` lines and log rows; flagging conflicts under **Open questions**; appending a dated Progress log row; re-running the check; and split rules (`14` → `14a`, next unused number, never renumber) (FR-006, FR-009). Don't edit the file (content is adopted as-is); record any gap in `specs/002-step-breakdown-skill/research.md` under a "Follow-ups" heading and in the implementation report. The known gap is the explicit "start over → new file name" rule from issue §6 (spec Edge Cases).
+- [X] T011 [P] [US2] Using a copy of `$S/example-steps.md`, tick 10a–10c without ticking parent 10 and run the checker: expect the "all children ticked — tick the parent" warning and step 11 not yet available; then tick 10 and confirm step 11 becomes available once gate 5 is ticked. Also, from a fresh copy: tick 10 with 10a–10c unticked → expect the "parent ticked but not all children are" error, exit 1; and tick 10b while gate 5 is unticked → expect the "ticked while its Needs … aren't" warning (parent/child availability, data-model Parent rules, spec Edge Cases).
 
 **Checkpoint**: Update and split behaviour is documented in the skill and its parent/child rules are enforced by the checker.
 
@@ -78,9 +78,9 @@ repo, used for the fetched issue body, extracted files and fixture plans.
 
 **Independent Test**: quickstart §5 passes.
 
-- [ ] T012 [US3] Ensure `step-breakdown/` contains only the two files (no `__pycache__`), then build `step-breakdown.skill` at the repo root with the README's PowerShell 7 command (`[IO.Compression.ZipFile]::CreateFromDirectory("$PWD\step-breakdown", "$PWD\step-breakdown.skill", 'Optimal', $true)`), deleting any existing archive first (research R3, FR-010).
-- [ ] T013 [US3] Run quickstart §5: file entries are exactly `step-breakdown/SKILL.md` and `step-breakdown/scripts/check_plan.py`, no entry contains `\`, and each entry's bytes equal the folder file (SC-005).
-- [ ] T014 [P] [US3] Confirm `step-breakdown/SKILL.md` has the "If Python isn't available, do the checks by reading the file carefully" fallback (US3 scenario 4).
+- [X] T012 [US3] Ensure `step-breakdown/` contains only the two files (no `__pycache__`), then build `step-breakdown.skill` at the repo root with the README's PowerShell 7 command (`[IO.Compression.ZipFile]::CreateFromDirectory("$PWD\step-breakdown", "$PWD\step-breakdown.skill", 'Optimal', $true)`), deleting any existing archive first (research R3, FR-010).
+- [X] T013 [US3] Run quickstart §5: file entries are exactly `step-breakdown/SKILL.md` and `step-breakdown/scripts/check_plan.py`, no entry contains `\`, and each entry's bytes equal the folder file (SC-005).
+- [X] T014 [P] [US3] Confirm `step-breakdown/SKILL.md` has the "If Python isn't available, do the checks by reading the file carefully" fallback (US3 scenario 4).
 
 **Checkpoint**: The archive can be uploaded alongside the other `.skill` files.
 
@@ -92,10 +92,10 @@ repo, used for the fetched issue body, extracted files and fixture plans.
 
 **Independent Test**: quickstart §6 passes.
 
-- [ ] T015 [US4] In `README.md`, add `step-breakdown` to the Quick start macOS/Linux `cp -r` command (L13), the Windows `Copy-Item` command (L22) and the Updating `cp -r` command (L227), after `peter-pr-review` in each (FR-011, research R5).
-- [ ] T016 [US4] In `README.md`, change "All five skills" (L25) to "All six skills", add a `step-breakdown` row to the skills table after `peter-pr-review` linking `step-breakdown/SKILL.md`, and widen the tagline (L3) by one clause to mention planning (FR-011, research R5).
-- [ ] T017 [US4] In `README.md`, add a `### step-breakdown` section after the `### peter-pr-review` section, in the same shape as the others: what it does, **When it runs** (including the code-planning exclusion and a "try it" prompt such as "break down moving apartments in 6 weeks"), **What it produces** (one `<project-slug>-steps.md` with IDs, `Needs`, done-checks, gates, parallel markers, Decisions, Open questions, Progress log; the checker's report), and a **What's inside** tree (`SKILL.md`, `scripts/check_plan.py`, noting Python 3.8+ stdlib and the manual fallback).
-- [ ] T018 [US4] Run quickstart §6 grep checks against `README.md` and confirm the new section's headings match the existing per-skill sections.
+- [X] T015 [US4] In `README.md`, add `step-breakdown` to the Quick start macOS/Linux `cp -r` command (L13), the Windows `Copy-Item` command (L22) and the Updating `cp -r` command (L227), after `peter-pr-review` in each (FR-011, research R5).
+- [X] T016 [US4] In `README.md`, change "All five skills" (L25) to "All six skills", add a `step-breakdown` row to the skills table after `peter-pr-review` linking `step-breakdown/SKILL.md`, and widen the tagline (L3) by one clause to mention planning (FR-011, research R5).
+- [X] T017 [US4] In `README.md`, add a `### step-breakdown` section after the `### peter-pr-review` section, in the same shape as the others: what it does, **When it runs** (including the code-planning exclusion and a "try it" prompt such as "break down moving apartments in 6 weeks"), **What it produces** (one `<project-slug>-steps.md` with IDs, `Needs`, done-checks, gates, parallel markers, Decisions, Open questions, Progress log; the checker's report), and a **What's inside** tree (`SKILL.md`, `scripts/check_plan.py`, noting Python 3.8+ stdlib and the manual fallback).
+- [X] T018 [US4] Run quickstart §6 grep checks against `README.md` and confirm the new section's headings match the existing per-skill sections.
 
 **Checkpoint**: All four stories done.
 
@@ -103,9 +103,9 @@ repo, used for the fetched issue body, extracted files and fixture plans.
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T019 Run quickstart §7: no changes outside `specs/002-step-breakdown-skill/`, `step-breakdown/`, `step-breakdown.skill` and `README.md` (FR-012, SC-007).
-- [ ] T020 Commit the skill folder, archive and README on `002-step-breakdown-skill`, referencing issue #3.
-- [ ] T021 Record that quickstart §8 (manual smoke test in a fresh Claude Code session, macOS/Linux and Windows per issue §8) is left for the maintainer; it can't be run from this session because skills load at session start.
+- [X] T019 Run quickstart §7: no changes outside `specs/002-step-breakdown-skill/`, `step-breakdown/`, `step-breakdown.skill` and `README.md` (FR-012, SC-007).
+- [X] T020 Commit the skill folder, archive and README on `002-step-breakdown-skill`, referencing issue #3.
+- [X] T021 Recorded (see implementation report) that quickstart §8 (manual smoke test in a fresh Claude Code session, macOS/Linux and Windows per issue §8) is left for the maintainer; it can't be run from this session because skills load at session start.
 
 ---
 

@@ -76,7 +76,7 @@ grep -n "Copy-Item .*step-breakdown" README.md
 ## 7. Nothing else changed (FR-012, SC-007)
 
 ```bash
-git diff --stat main -- . ':!specs' ':!step-breakdown' ':!step-breakdown.skill' ':!README.md'
+git diff --stat main -- . ':!specs' ':!step-breakdown' ':!step-breakdown.skill' ':!README.md' ':!.gitignore'
 ```
 
 Expected: no output.

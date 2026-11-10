@@ -1,6 +1,6 @@
 # agent-skills
 
-Skills for Claude that help it write, review, and refactor code well, and write GitHub issues engineers can act on.
+Skills for Claude that help it write, review, and refactor code well, write GitHub issues engineers can act on, and break big efforts into steps you can track for weeks.
 
 ## Quick start (Claude Code)
 
@@ -10,7 +10,7 @@ Skills for Claude that help it write, review, and refactor code well, and write 
 git clone https://github.com/peterelmwood/agent-skills.git
 mkdir -p ~/.claude/skills
 cd agent-skills
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown ~/.claude/skills/
 ```
 
 **Windows (PowerShell)**
@@ -19,10 +19,10 @@ cp -r design-patterns react-anti-patterns bug-report-issue-author feature-reques
 git clone https://github.com/peterelmwood/agent-skills.git
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 cd agent-skills
-Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review "$HOME\.claude\skills\"
+Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review, step-breakdown "$HOME\.claude\skills\"
 ```
 
-Then start a new Claude Code session. All five skills are now installed. You don't have to call them: Claude uses one when your request matches it.
+Then start a new Claude Code session. All six skills are now installed. You don't have to call them: Claude uses one when your request matches it.
 
 To install only some of them, copy just those folders (for example `cp -r design-patterns ~/.claude/skills/`).
 
@@ -44,6 +44,7 @@ The `.skill` files are zip archives of the folders, packaged for upload.
 | [`bug-report-issue-author`](bug-report-issue-author/SKILL.md) | Turning a bug into a GitHub issue with a root-cause analysis and a proposed fix. |
 | [`feature-request-issue-author`](feature-request-issue-author/SKILL.md) | Turning a feature idea into a GitHub issue with code research, risks, and a rollout plan. |
 | [`peter-pr-review`](peter-pr-review/SKILL.md) | Reviewing a pull request or diff the way Peter does, on Django/DRF and React/TypeScript code, with inline comments and a review summary. |
+| [`step-breakdown`](step-breakdown/SKILL.md) | Breaking a project or multi-week effort into a numbered checklist of small steps, with done-checks, dependencies, and waiting gates, that you can come back to for weeks. |
 
 ### design-patterns
 
@@ -194,6 +195,31 @@ peter-pr-review/
     └── examples-summaries-and-pushback.md   review summaries, and replies when the author disagrees
 ```
 
+### step-breakdown
+
+This skill turns a large, fuzzy effort, such as a migration, a launch, a move, or a talk submission, into one Markdown checklist you can come back to for weeks. Each step is small (about 30 minutes or less), starts with a verb, and has a concrete done-check. The checklist answers one question on any day you open it: *what can I do right now?*
+
+- **Dependencies decide what's available.** Every step lists `Needs:`. A step is available when everything it needs is ticked, so file order is only a suggestion.
+- **Waits are gates.** Approvals, deliveries, and replies are `⏳ GATE` checkboxes, ticked only when the outside event happens, so ticking "Submit permit application" never makes "Start construction" look ready.
+- **Parallel lines** (`⇉`) show steps you can do in any order or at the same time, with a `⚠` note when they compete for the same person or tool.
+- **Nothing is invented.** Unknown details are `[TBD: …]` placeholders, and later phases that depend on an open decision stay as `🔭 Expand after <ID>` placeholders.
+- **IDs are stable.** A step that turns out too big is split into `14a`, `14b`, … under `14`, and nothing is ever renumbered.
+
+**When it runs:** when you ask Claude to break down, chunk, or make a step-by-step plan, roadmap, or checklist for a project or multi-week effort, even if you don't say "steps" ("how do I even start on X", "I keep stalling on this project"), and when you come back to update an existing plan. It doesn't run for a single quick task or for a code-level plan you're about to implement in the same session. If Claude answers inline instead, ask for a step plan: for example, "break down moving apartments in 6 weeks".
+
+**What it produces:** one `<project-slug>-steps.md` file with numbered steps and gates, active-effort estimates, Decisions, Open questions, and a Progress log. When you report progress, Claude updates the same file in place: it keeps your ticks, notes, and log rows, and lists anything that conflicts with the file under **Open questions** instead of overwriting it. Before saving, it runs a consistency checker and tells you which steps are available now and which gates to start early.
+
+**What's inside:**
+
+```
+step-breakdown/
+├── SKILL.md                              process, dependency/gate/split rules, output template, worked example, update rules
+└── scripts/
+    └── check_plan.py                     consistency checker: IDs, Needs, cycles, parallel lines, done-checks, "available now"
+```
+
+`check_plan.py` needs Python 3.8 or later and uses only the standard library. Where scripts can't run (for example on Claude.ai), the skill does the same checks by reading the file.
+
 ---
 
 ## How skills work
@@ -224,7 +250,7 @@ In Claude Code, ask *"What skills do you have available?"* The installed skills 
 ```sh
 cd agent-skills
 git pull
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown ~/.claude/skills/
 ```
 
 On Windows, run the same `Copy-Item` command from the quick start.
