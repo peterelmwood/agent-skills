@@ -10,7 +10,7 @@ Skills for Claude that help it write, review, and refactor code well, write GitH
 git clone https://github.com/peterelmwood/agent-skills.git
 mkdir -p ~/.claude/skills
 cd agent-skills
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt ~/.claude/skills/
 ```
 
 **Windows (PowerShell)**
@@ -19,10 +19,10 @@ cp -r design-patterns react-anti-patterns bug-report-issue-author feature-reques
 git clone https://github.com/peterelmwood/agent-skills.git
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 cd agent-skills
-Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review, step-breakdown "$HOME\.claude\skills\"
+Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review, step-breakdown, deepen-prompt "$HOME\.claude\skills\"
 ```
 
-Then start a new Claude Code session. All six skills are now installed. You don't have to call them: Claude uses one when your request matches it.
+Then start a new Claude Code session. All seven skills are now installed. You don't have to call them: Claude uses one when your request matches it.
 
 To install only some of them, copy just those folders (for example `cp -r design-patterns ~/.claude/skills/`).
 
@@ -45,6 +45,7 @@ The `.skill` files are zip archives of the folders, packaged for upload.
 | [`feature-request-issue-author`](feature-request-issue-author/SKILL.md) | Turning a feature idea into a GitHub issue with code research, risks, and a rollout plan. |
 | [`peter-pr-review`](peter-pr-review/SKILL.md) | Reviewing a pull request or diff the way Peter does, on Django/DRF and React/TypeScript code, with inline comments and a review summary. |
 | [`step-breakdown`](step-breakdown/SKILL.md) | Breaking a project or multi-week effort into a numbered checklist of small steps, with done-checks, dependencies, and waiting gates, that you can come back to for weeks. |
+| [`deepen-prompt`](deepen-prompt/SKILL.md) | Making a task or prompt deeper, not bigger: how a top professional would frame it, what raw material and named methods they'd use, and what independent check would show the answer is right. |
 
 ### design-patterns
 
@@ -220,6 +221,28 @@ step-breakdown/
 
 `check_plan.py` needs Python 3.8 or later and uses only the standard library. Where scripts can't run (for example on Claude.ai), the skill does the same checks by reading the file.
 
+### deepen-prompt
+
+This skill is for when asking Claude to do something "better" only makes the answer bigger: more sections, more options, more caveats. Instead, it asks how a top professional in that field would approach the task, and rewrites your prompt to ask for that. It answers four questions:
+
+- **What would an expert do that you aren't asking for?** A move specific to the field, such as checking a premise, reframing the question, or asking for a baseline first.
+- **What's the rawest material?** The primary source the expert would start from (logs, the ordinance text, the dataset, the object itself), set against the summary, screenshot, or article you have now.
+- **Which methods and tools?** Named concretely (`git bisect`, `EXPLAIN ANALYZE`, a pin-type moisture meter), not as categories. In a niche field where Claude doesn't know the specialist toolset, it says so and suggests how to find out instead of inventing names.
+- **What, other than Claude or you, shows it's right?** An independent check and how to get it: a test, a measurement, the primary source, or a qualified reviewer. Asking another model, or asking you, doesn't count.
+
+The rewrite keeps the same deliverables as your original prompt. It changes the inputs, the method, and what "done" means, not the amount of output.
+
+**When it runs:** when you ask Claude to go deeper, be more rigorous, approach something "like a pro would", make an answer verifiable, or say "what am I missing in how I framed this", even if you don't say "deeper". It doesn't run for copy-editing, shortening, or formatting a prompt, for expanding something into a longer deliverable, or for actually carrying out research. If the task is too vague to pick an expert (for example "help me decide"), Claude asks one clarifying question instead of guessing. To try it: "deeper version of this: 'tell me why my nightly ETL got slower'".
+
+**What it produces:** one line naming the assumed field or role (so you can correct it), four short labeled answers, and the rewritten prompt in a fenced block you can copy. It then stops and offers to run the rewritten prompt. Nothing is run until you say so.
+
+**What's inside:**
+
+```
+deepen-prompt/
+└── SKILL.md                              the loop (pick the expert, four questions, deeper-not-bigger rewrite), output format, worked example
+```
+
 ---
 
 ## How skills work
@@ -250,7 +273,7 @@ In Claude Code, ask *"What skills do you have available?"* The installed skills 
 ```sh
 cd agent-skills
 git pull
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt ~/.claude/skills/
 ```
 
 On Windows, run the same `Copy-Item` command from the quick start.
