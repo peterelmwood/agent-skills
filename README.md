@@ -10,7 +10,7 @@ Skills for Claude that help it write, review, and refactor code well, write GitH
 git clone https://github.com/peterelmwood/agent-skills.git
 mkdir -p ~/.claude/skills
 cd agent-skills
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt asd-ste100 ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt asd-ste100 explain-scope-first ~/.claude/skills/
 ```
 
 **Windows (PowerShell)**
@@ -19,10 +19,10 @@ cp -r design-patterns react-anti-patterns bug-report-issue-author feature-reques
 git clone https://github.com/peterelmwood/agent-skills.git
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 cd agent-skills
-Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review, step-breakdown, deepen-prompt, asd-ste100 "$HOME\.claude\skills\"
+Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review, step-breakdown, deepen-prompt, asd-ste100, explain-scope-first "$HOME\.claude\skills\"
 ```
 
-Then start a new Claude Code session. All eight skills are now installed. You don't have to call them: Claude uses one when your request matches it.
+Then start a new Claude Code session. All nine skills are now installed. You don't have to call them: Claude uses one when your request matches it.
 
 To install only some of them, copy just those folders (for example `cp -r design-patterns ~/.claude/skills/`).
 
@@ -47,6 +47,7 @@ The `.skill` files are zip archives of the folders, packaged for upload.
 | [`step-breakdown`](step-breakdown/SKILL.md) | Breaking a project or multi-week effort into a numbered checklist of small steps, with done-checks, dependencies, and waiting gates, that you can come back to for weeks. |
 | [`deepen-prompt`](deepen-prompt/SKILL.md) | Making a task or prompt deeper, not bigger: how a top professional would frame it, what raw material and named methods they'd use, and what independent check would show the answer is right. |
 | [`asd-ste100`](asd-ste100/SKILL.md) | Drafting, rewriting, or reviewing technical documentation in ASD-STE100 Simplified Technical English, or writing a reusable prompt that applies it, without claiming compliance that hasn't been verified. |
+| [`explain-scope-first`](explain-scope-first/SKILL.md) | Having Claude read back what it thinks you're asking for, and list what it won't touch, before it changes anything. |
 
 ### design-patterns
 
@@ -274,6 +275,27 @@ asd-ste100/
     └── openai.yaml                       optional display metadata for OpenAI Codex (Claude ignores it)
 ```
 
+### explain-scope-first
+
+This skill is for when you want to see how Claude understood a change before it makes one: "before you change anything, explain back what you think I'm asking for, and list what you're NOT going to touch." Claude may read files first to understand the target, but before its first edit it sends a short scope statement with three parts:
+
+- **What I understand:** the outcome you want, in Claude's own words, with the target and any constraints or assumptions that change the result.
+- **What I will change:** the smallest set of files or areas it expects to modify, with tentative targets marked as tentative.
+- **What I will not touch:** concrete neighboring areas you'd recognize (existing wording, validation, other pages, public interfaces), not a vague "nothing unrelated". If there's no meaningful neighboring area, it says so instead of inventing one.
+
+The readback is an explanation, not an approval gate. If you've already asked for the change, Claude carries on after the statement. It waits only when you ask it to, or when an open ambiguity would change the outcome. The exclusions are commitments: if the work turns out to need an area Claude said it wouldn't touch, it stops before changing that area, explains why, and agrees the new boundary with you. If you correct its reading, it restates the scope before continuing. On a longer task it repeats the statement only when the scope actually changes.
+
+**When it runs:** when you ask for a scope check, a readback before editing, or explicit boundaries around a change. It doesn't run for questions or analysis that don't change anything, and it isn't a global rule for every edit. To try it: "change the Save button label to Submit; explain scope first, and leave validation alone".
+
+**What it produces:** the scope statement before the first change, then the work within that scope, then a short report of what changed, how it was checked, and any agreed change to the boundaries. It doesn't claim untouched areas were verified unless it actually checked them.
+
+**What's inside:**
+
+```
+explain-scope-first/
+└── SKILL.md                              scope statement (understand / change / not touch), proceeding within scope, completion report
+```
+
 ---
 
 ## How skills work
@@ -304,7 +326,7 @@ In Claude Code, ask *"What skills do you have available?"* The installed skills 
 ```sh
 cd agent-skills
 git pull
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt asd-ste100 ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt asd-ste100 explain-scope-first ~/.claude/skills/
 ```
 
 On Windows, run the same `Copy-Item` command from the quick start.
