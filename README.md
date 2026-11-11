@@ -1,6 +1,6 @@
 # agent-skills
 
-Skills for Claude that help it write, review, and refactor code well, write GitHub issues engineers can act on, and break big efforts into steps you can track for weeks.
+Skills for Claude that help it write, review, and refactor code well, write GitHub issues engineers can act on, keep technical documentation in Simplified Technical English, and break big efforts into steps you can track for weeks.
 
 ## Quick start (Claude Code)
 
@@ -10,7 +10,7 @@ Skills for Claude that help it write, review, and refactor code well, write GitH
 git clone https://github.com/peterelmwood/agent-skills.git
 mkdir -p ~/.claude/skills
 cd agent-skills
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt asd-ste100 ~/.claude/skills/
 ```
 
 **Windows (PowerShell)**
@@ -19,10 +19,10 @@ cp -r design-patterns react-anti-patterns bug-report-issue-author feature-reques
 git clone https://github.com/peterelmwood/agent-skills.git
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 cd agent-skills
-Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review, step-breakdown, deepen-prompt "$HOME\.claude\skills\"
+Copy-Item -Recurse -Force design-patterns, react-anti-patterns, bug-report-issue-author, feature-request-issue-author, peter-pr-review, step-breakdown, deepen-prompt, asd-ste100 "$HOME\.claude\skills\"
 ```
 
-Then start a new Claude Code session. All seven skills are now installed. You don't have to call them: Claude uses one when your request matches it.
+Then start a new Claude Code session. All eight skills are now installed. You don't have to call them: Claude uses one when your request matches it.
 
 To install only some of them, copy just those folders (for example `cp -r design-patterns ~/.claude/skills/`).
 
@@ -46,6 +46,7 @@ The `.skill` files are zip archives of the folders, packaged for upload.
 | [`peter-pr-review`](peter-pr-review/SKILL.md) | Reviewing a pull request or diff the way Peter does, on Django/DRF and React/TypeScript code, with inline comments and a review summary. |
 | [`step-breakdown`](step-breakdown/SKILL.md) | Breaking a project or multi-week effort into a numbered checklist of small steps, with done-checks, dependencies, and waiting gates, that you can come back to for weeks. |
 | [`deepen-prompt`](deepen-prompt/SKILL.md) | Making a task or prompt deeper, not bigger: how a top professional would frame it, what raw material and named methods they'd use, and what independent check would show the answer is right. |
+| [`asd-ste100`](asd-ste100/SKILL.md) | Drafting, rewriting, or reviewing technical documentation in ASD-STE100 Simplified Technical English, or writing a reusable prompt that applies it, without claiming compliance that hasn't been verified. |
 
 ### design-patterns
 
@@ -243,6 +244,36 @@ deepen-prompt/
 └── SKILL.md                              the loop (pick the expert, four questions, deeper-not-bigger rewrite), output format, worked example
 ```
 
+### asd-ste100
+
+This skill uses [ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/) (STE) as a writing constraint for English technical documentation, such as maintenance procedures, operating instructions, and descriptions. It handles three kinds of request:
+
+- **Create a reusable prompt** that constrains a writing task to STE. If you only ask for the prompt, Claude gives you the prompt and doesn't also do the task.
+- **Draft or rewrite** text under the constraint.
+- **Review** existing text against it.
+
+Technical meaning comes first. Facts, conditions, sequence, limits, units, identifiers, warnings, and the strength of "must" and "must not" are kept. Claude doesn't invent missing safety information or guess at an ambiguous instruction; it flags the ambiguity instead. Code, UI labels, API names, and other exact strings are left as they are.
+
+The skill keeps two results apart:
+
+- **STE-inspired** text follows practical defaults: short sentences (the usual limits are 20 words for procedures and 25 for descriptions), one instruction per step, active voice, one term per concept, and no idioms. This is what you get when the official materials aren't available.
+- **Verified conformance** needs the ASD-STE100 issue that applies to your work, its dictionary (approved meanings and parts of speech), the rules for technical names and technical verbs, and any approved terminology for your project. A plain-language rewrite, a sentence-length check, or a model's self-check doesn't prove compliance, so Claude never claims compliance from those alone and never invents rule numbers.
+
+The standard and its dictionary are copyrighted and aren't included. Get them through the official site, and give them to Claude (or tell it where they are) when you need a conformance check.
+
+**When it runs:** when you ask for STE or ASD-STE100: to write, rewrite, or review technical documentation in Simplified Technical English, or to write a prompt that does. It doesn't apply STE to unrelated writing. To try it: "rewrite this maintenance procedure in Simplified Technical English".
+
+**What it produces:** for a prompt request, a filled-in constraint prompt for your task. For drafting and rewriting, the text, plus short notes on anything that still needs checking. For a review, a list of findings with location, problem, suggested revision, and the rule reference where it's verified, with confirmed violations kept apart from editorial suggestions and from items that need the dictionary or a domain expert. A conformance assessment also says which issue of the standard and which materials were used.
+
+**What's inside:**
+
+```
+asd-ste100/
+├── SKILL.md                              basis, drafting defaults, prompt template, review and reporting rules
+└── agents/
+    └── openai.yaml                       optional display metadata for OpenAI Codex (Claude ignores it)
+```
+
 ---
 
 ## How skills work
@@ -273,7 +304,7 @@ In Claude Code, ask *"What skills do you have available?"* The installed skills 
 ```sh
 cd agent-skills
 git pull
-cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt ~/.claude/skills/
+cp -r design-patterns react-anti-patterns bug-report-issue-author feature-request-issue-author peter-pr-review step-breakdown deepen-prompt asd-ste100 ~/.claude/skills/
 ```
 
 On Windows, run the same `Copy-Item` command from the quick start.

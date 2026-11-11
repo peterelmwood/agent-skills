@@ -1,0 +1,4 @@
+interface:
+  display_name: "ASD-STE100 Writing Constraint"
+  short_description: "Constrain technical writing with ASD-STE100"
+  default_prompt: "Use $asd-ste100 to create a reusable prompt that constrains technical documentation to Simplified Technical English."
